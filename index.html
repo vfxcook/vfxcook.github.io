@@ -1,0 +1,2720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoes of the Forbidden - Pitch Deck</title>
+    <style>
+        :root {
+            --mouse-x: 50%;
+            --mouse-y: 50%;
+            --flashlight-radius: 900px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Palatino', 'Times New Roman', serif;
+            background: #000;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            cursor: none;
+            position: relative;
+        }
+
+        /* Flashlight System - Pale Yellow Color */
+        .flashlight-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle var(--flashlight-radius) at var(--mouse-x) var(--mouse-y), 
+                        transparent 0%, 
+                        transparent 20%, 
+                        rgba(255, 255, 200, 0.1) 25%,  /* Pale yellow inner */
+                        rgba(255, 255, 150, 0.2) 30%,  /* Pale yellow outer */
+                        rgba(0, 0, 0, 0.3) 35%,
+                        rgba(0, 0, 0, 0.8) 55%,
+                        rgba(0, 0, 0, 0.98) 100%);
+            pointer-events: none;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+
+        .flashlight-overlay.disabled {
+            opacity: 0;
+        }
+
+        .flashlight-beam {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle calc(var(--flashlight-radius) * 0.9) at var(--mouse-x) var(--mouse-y), 
+                        rgba(255, 255, 220, 0.25) 0%,  /* Pale yellow center beam */
+                        rgba(255, 255, 180, 0.2) 15%,  /* Pale yellow middle beam */
+                        rgba(255, 250, 160, 0.15) 30%, /* Pale yellow outer beam */
+                        transparent 45%);
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0.9;
+            animation: flickerBeam 5s infinite;
+        }
+
+        @keyframes flickerBeam {
+            0%, 100% { opacity: 0.6; }
+            97% { opacity: 0.6; }
+            98% { opacity: 0.2; }
+            99% { opacity: 0.6; }
+        }
+
+        /* Custom Cursor with Magic Dust - Pale Yellow */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #FFFF99 0%, #FFEB9C 50%, transparent 70%); /* Pale yellow cursor */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 20px #FFFF99; /* Pale yellow glow */
+        }
+
+        .cursor::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 255, 153, 0.4); /* Pale yellow ring */
+            border-radius: 50%;
+            top: -10px;
+            left: -10px;
+            animation: cursorPulse 2s infinite;
+        }
+
+        @keyframes cursorPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.3; }
+        }
+
+        .dust {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: #FFFF99; /* Pale yellow dust */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: dustFall 2s linear forwards;
+            box-shadow: 0 0 6px #FFFF99; /* Pale yellow dust glow */
+        }
+
+        @keyframes dustFall {
+            0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(50px) rotate(360deg); }
+        }
+
+        /* Random Fog Effect */
+        .fog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+            opacity: 0.7;
+        }
+
+        .fog-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(200, 200, 255, 0.1) 0%, rgba(150, 150, 200, 0.05) 50%, transparent 100%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: fogDrift 20s infinite linear;
+            filter: blur(2px);
+        }
+
+        @keyframes fogDrift {
+            0% { 
+                opacity: 0;
+                transform: translateX(-100px) translateY(0px) scale(0.5);
+            }
+            10% { 
+                opacity: 0.8;
+                transform: translateX(0px) translateY(-20px) scale(1);
+            }
+            90% { 
+                opacity: 0.8;
+                transform: translateX(100vw) translateY(-40px) scale(1.5);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateX(calc(100vw + 100px)) translateY(-60px) scale(0.5);
+            }
+        }
+
+        .fog-particle.slow {
+            animation-duration: 25s;
+        }
+
+        .fog-particle.fast {
+            animation-duration: 15s;
+        }
+
+        .fog-particle.large {
+            width: 120px;
+            height: 120px;
+        }
+
+        .fog-particle.medium {
+            width: 80px;
+            height: 80px;
+        }
+
+        .fog-particle.small {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Night Sky Background */
+        .night-sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at top, #1e1e3f 0%, #000 100%),
+                radial-gradient(ellipse at bottom, #0f0f1e 0%, transparent 50%);
+            z-index: -3;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Moving Shadow Elements */
+        .floating-shadow {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background: rgba(20, 20, 40, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            filter: blur(2px);
+        }
+
+        .shadow1 {
+            animation: floatShadow1 20s infinite linear;
+        }
+
+        .shadow2 {
+            animation: floatShadow2 25s infinite linear;
+        }
+
+        .shadow3 {
+            animation: floatShadow3 22s infinite linear;
+        }
+
+        @keyframes floatShadow1 {
+            0% { transform: translateX(-100px) translateY(100vh); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateX(100vw) translateY(-100px); opacity: 0; }
+        }
+
+        @keyframes floatShadow2 {
+            0% { transform: translateX(100vw) translateY(50vh); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateX(-100px) translateY(20vh); opacity: 0; }
+        }
+
+        @keyframes floatShadow3 {
+            0% { transform: translateX(50vw) translateY(100vh); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateX(30vw) translateY(-100px); opacity: 0; }
+        }
+
+        /* Hidden Horror Elements */
+        .hidden-element {
+            position: fixed;
+            color: #ff4444;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px #ff4444;
+        }
+
+        .hidden-element.revealed {
+            opacity: 0.8;
+            animation: eyeGlow 2s infinite;
+        }
+
+        @keyframes eyeGlow {
+            0%, 100% { text-shadow: 0 0 10px #ff4444; transform: scale(1); }
+            50% { text-shadow: 0 0 20px #ff4444, 0 0 30px #ff0000; transform: scale(1.1); }
+        }
+
+        /* Vignette Effect */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Rain Effect */
+        .rain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.1));
+            animation: fall 1s linear infinite;
+            border-radius: 1px;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        /* Enhanced Lightning Effect */
+        .lightning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 98;
+            background: transparent;
+        }
+
+        .lightning-bolt {
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(to bottom, #ffffff, #e6f3ff, #ffffff);
+            box-shadow: 0 0 30px #ffffff, 0 0 60px #ffffff, 0 0 90px #ffffff;
+            opacity: 0;
+            transform-origin: top;
+            filter: brightness(2);
+        }
+
+        .lightning-bolt.active {
+            animation: lightningStrike 0.4s ease-out;
+        }
+
+        @keyframes lightningStrike {
+            0% { opacity: 0; transform: scaleY(0); }
+            15% { opacity: 1; transform: scaleY(1); }
+            25% { opacity: 0.6; }
+            35% { opacity: 1; }
+            45% { opacity: 0.4; }
+            55% { opacity: 1; }
+            65% { opacity: 0.7; }
+            75% { opacity: 1; }
+            85% { opacity: 0.3; }
+            100% { opacity: 0; transform: scaleY(1); }
+        }
+
+        .lightning-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            pointer-events: none;
+            z-index: 97;
+        }
+
+        .lightning-flash.active {
+            animation: lightningFlash 0.5s ease-out;
+        }
+
+        @keyframes lightningFlash {
+            0% { background: rgba(255, 255, 255, 0); }
+            20% { background: rgba(255, 255, 255, 0.6); }
+            30% { background: rgba(255, 255, 255, 0.2); }
+            40% { background: rgba(255, 255, 255, 0.7); }
+            50% { background: rgba(255, 255, 255, 0.1); }
+            60% { background: rgba(255, 255, 255, 0.8); }
+            70% { background: rgba(255, 255, 255, 0.3); }
+            80% { background: rgba(255, 255, 255, 0.5); }
+            100% { background: rgba(255, 255, 255, 0); }
+        }
+
+        /* Enhanced Glitch Effects */
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 96;
+            opacity: 0;
+        }
+
+        .glitch-overlay.active {
+            animation: glitchEffect 0.3s ease-out;
+        }
+
+        @keyframes glitchEffect {
+            0% { opacity: 0; }
+            10% { opacity: 1; background: linear-gradient(90deg, #ff0000 0%, transparent 20%, #00ff00 40%, transparent 60%, #0000ff 80%, transparent 100%); }
+            20% { opacity: 0; }
+            30% { opacity: 1; background: linear-gradient(180deg, transparent 0%, #ff00ff 50%, transparent 100%); }
+            40% { opacity: 0; }
+            50% { opacity: 1; background: linear-gradient(45deg, #ffff00 0%, transparent 100%); }
+            100% { opacity: 0; }
+        }
+
+        .glitch-text {
+            animation: textGlitch 0.3s ease-out;
+        }
+
+        @keyframes textGlitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Jump Scare Elements */
+        .jumpscare {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000;
+        }
+
+        .jumpscare.active {
+            animation: jumpscareFlash 0.4s ease-out;
+        }
+
+        @keyframes jumpscareFlash {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Audio Prompt */
+        .audio-prompt {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(30, 30, 60, 0.95);
+            border: 2px solid #8A2BE2;
+            padding: 3rem;
+            border-radius: 20px;
+            z-index: 1002;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            display: none;
+            box-shadow: 0 20px 60px rgba(138, 43, 226, 0.3);
+        }
+
+        .audio-prompt h3 {
+            color: #8A2BE2;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .audio-prompt p {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .audio-prompt button {
+            background: linear-gradient(45deg, #8A2BE2, #ff4444);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        .audio-prompt button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.5);
+        }
+
+        /* Enhanced Controls */
+        .controls {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background: rgba(138, 43, 226, 0.3);
+            border: 2px solid #8A2BE2;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e0e0e0;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        .control-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: rgba(138, 43, 226, 0.1);
+            border-color: rgba(138, 43, 226, 0.2);
+        }
+
+        .control-button.disabled:hover {
+            transform: none;
+            background: rgba(138, 43, 226, 0.1);
+            box-shadow: none;
+        }
+
+        .control-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .control-button:hover::before {
+            left: 100%;
+        }
+
+        .control-button:hover {
+            width: auto;
+            min-width: 50px;
+            padding: 0 20px;
+            border-radius: 25px;
+            opacity: 1;
+            background: rgba(138, 43, 226, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        .control-button:active {
+            transform: scale(0.95);
+        }
+
+        .control-button .icon {
+            min-width: 20px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .control-button .label {
+            margin-left: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            max-width: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .control-button:hover .label {
+            opacity: 1;
+            transform: translateX(0);
+            max-width: 150px;
+        }
+
+        /* Music control styling */
+        .control-button.music-on .icon::after {
+            content: ' ON';
+            color: #00ff00;
+            font-size: 0.6rem;
+        }
+
+        .control-button.music-off .icon::after {
+            content: ' OFF';
+            color: #ff4444;
+            font-size: 0.6rem;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+            padding: 1rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8A2BE2;
+            text-shadow: 0 0 15px #8A2BE2;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '🐍';
+            position: absolute;
+            left: -30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #8A2BE2, #ff4444);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #8A2BE2;
+            text-shadow: 0 0 10px #8A2BE2;
+        }
+
+        /* Main Content */
+        main {
+            padding-top: 80px;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(100px);
+            transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            color: #8A2BE2;
+            text-shadow: 0 0 30px #8A2BE2;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            position: relative;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 30px #8A2BE2, 0 0 40px #8A2BE2; }
+            100% { text-shadow: 0 0 50px #8A2BE2, 0 0 60px #8A2BE2, 0 0 70px #4B0082; }
+        }
+
+        .hero .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 3rem;
+            color: #ccc;
+            max-width: 800px;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 2s ease 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+            width: 100%;
+        }
+
+        .stat-card {
+            background: rgba(138, 43, 226, 0.1);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(138, 43, 226, 0.1), transparent 30%);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(138, 43, 226, 0.4);
+            border-color: #8A2BE2;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #8A2BE2;
+            display: block;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Animated Numbers */
+        .animated-number {
+            display: inline-block;
+        }
+
+        /* Section Titles */
+        .section h2 {
+            font-size: 3.5rem;
+            margin-bottom: 3rem;
+            color: #8A2BE2;
+            text-align: center;
+            position: relative;
+            text-shadow: 0 0 20px #8A2BE2;
+        }
+
+        .section h2::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(45deg, transparent, #8A2BE2);
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -100px;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(45deg, #8A2BE2, transparent);
+        }
+
+        /* Content Cards */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .content-card {
+            background: rgba(30, 30, 60, 0.8);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .content-card:hover::before {
+            left: 100%;
+        }
+
+        .content-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            border-color: #8A2BE2;
+            box-shadow: 0 20px 40px rgba(138, 43, 226, 0.3);
+        }
+
+        .content-card h3 {
+            color: #8A2BE2;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #8A2BE2;
+        }
+
+        .content-card p {
+            line-height: 1.8;
+            color: #ddd;
+            font-size: 1.1rem;
+        }
+
+        /* Team Cards Styling */
+        .team-card {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(30, 30, 60, 0.9));
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            position: relative;
+        }
+
+        .team-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(45deg, #8A2BE2, #ff4444);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-card:hover::after {
+            opacity: 1;
+        }
+
+        .team-header {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+            padding-bottom: 1rem;
+        }
+
+        .team-header h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .role {
+            color: #ff4444;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Video Trailer Section */
+        .trailer-container {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(30, 30, 60, 0.95));
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 25px;
+            padding: 4rem 3rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .trailer-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #8A2BE2, #ff4444, #8A2BE2);
+            animation: trailerPulse 3s infinite;
+        }
+
+        @keyframes trailerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(138, 43, 226, 0.4);
+            border: 3px solid rgba(138, 43, 226, 0.6);
+        }
+
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #8A2BE2, #ff4444, #8A2BE2);
+            border-radius: 20px;
+            z-index: -1;
+            animation: videoBorderGlow 4s infinite;
+        }
+
+        @keyframes videoBorderGlow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .game-trailer {
+            width: 100%;
+            height: auto;
+            min-height: 400px;
+            background: #000;
+            border-radius: 17px;
+            position: relative;
+        }
+
+        .trailer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 17px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-wrapper:hover .trailer-overlay {
+            opacity: 1;
+        }
+
+        .trailer-info {
+            text-align: center;
+            margin-top: 2rem;
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: rgba(30, 30, 60, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #8A2BE2, #ff4444, #8A2BE2);
+            animation: chartPulse 3s infinite;
+        }
+
+        @keyframes chartPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #8A2BE2, #ff4444, #8A2BE2);
+            border-radius: 15px;
+            transition: width 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            background-size: 200% 100%;
+            animation: progressShimmer 2s infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Revenue Chart */
+        .revenue-bars {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 300px;
+            margin: 3rem 0;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .revenue-bar {
+            width: 80px;
+            background: linear-gradient(to top, #8A2BE2, #ff4444);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            height: 0;
+            min-height: 0;
+        }
+
+        .revenue-bar.animate {
+            animation: growBar 2s ease-out forwards;
+        }
+
+        @keyframes growBar {
+            0% { height: 0; }
+            100% { height: var(--target-height); }
+        }
+
+        .revenue-bar:hover {
+            transform: scale(1.1) translateY(-10px);
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.8);
+        }
+
+        .revenue-bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            color: #ccc;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .revenue-bar::before {
+            content: attr(data-value);
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            color: #8A2BE2;
+            font-weight: bold;
+            text-shadow: 0 0 10px #8A2BE2;
+            white-space: nowrap;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 3rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #8A2BE2, #ff4444);
+            box-shadow: 0 0 10px #8A2BE2;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 3rem 0;
+            padding: 0 3rem;
+        }
+
+        .timeline-item:nth-child(odd) {
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            text-align: left;
+            margin-left: 50%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #8A2BE2;
+            border-radius: 50%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px #8A2BE2;
+            border: 3px solid #000;
+        }
+
+        .timeline-content {
+            background: rgba(30, 30, 60, 0.9);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.05);
+            border-color: #8A2BE2;
+            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.3);
+        }
+
+        .timeline-content h4 {
+            color: #8A2BE2;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(30, 30, 60, 0.9));
+            border: 2px solid #8A2BE2;
+            border-radius: 25px;
+            padding: 5rem 3rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+        }
+
+        .cta h2 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #8A2BE2, #ff4444);
+            color: white;
+            padding: 1.5rem 4rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            z-index: 2;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(138, 43, 226, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                margin-left: 60px;
+                text-align: left;
+            }
+            
+            .timeline-item:nth-child(even) {
+                margin-left: 60px;
+            }
+
+            .controls {
+                top: 80px;
+                right: 15px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #8A2BE2, #ff4444);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #ff4444, #8A2BE2);
+        }
+
+        @keyframes ripple {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 300px; height: 300px; opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="night-sky"></div>
+    <div class="stars"></div>
+    
+    <!-- Flashlight System -->
+    <div class="flashlight-overlay"></div>
+    <div class="flashlight-beam"></div>
+    
+    <!-- Weather Effects -->
+    <div class="rain-overlay"></div>
+    <div class="fog-overlay"></div>
+    <div class="lightning">
+        <div class="lightning-bolt"></div>
+        <div class="lightning-bolt"></div>
+        <div class="lightning-bolt"></div>
+    </div>
+    <div class="lightning-flash"></div>
+    
+    <!-- Glitch Effects -->
+    <div class="glitch-overlay"></div>
+    
+    <!-- Moving Shadow Elements -->
+    <div class="floating-shadow shadow1"></div>
+    <div class="floating-shadow shadow2"></div>
+    <div class="floating-shadow shadow3"></div>
+    
+    <!-- Hidden Horror Elements -->
+    <div class="hidden-element" style="top: 20%; left: 10%;">👁️</div>
+    <div class="hidden-element" style="top: 60%; right: 15%;">👀</div>
+    <div class="hidden-element" style="top: 80%; left: 70%;">👁️</div>
+    <div class="hidden-element" style="top: 30%; right: 40%;">🕷️</div>
+    <div class="hidden-element" style="top: 70%; left: 30%;">🦇</div>
+    
+    <div class="vignette"></div>
+    <div class="cursor"></div>
+    <div class="jumpscare"></div>
+    
+    <!-- Audio Elements -->
+    <audio id="bgMusic" loop>
+        <source src="audio/bg.aac" type="audio/aac">
+        <source src="audio/bg.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="rainSound" loop>
+        <source src="audio/rain.aac" type="audio/aac">
+        <source src="audio/rain.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="thunderSound">
+        <source src="audio/thunder.aac" type="audio/aac">
+        <source src="audio/thunder.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="screamSound">
+        <source src="audio/scream.aac" type="audio/aac">
+        <source src="audio/scream.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="crowSound">
+        <source src="audio/crow.aac" type="audio/aac">
+        <source src="audio/crow.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Audio Prompt -->
+    <div class="audio-prompt" id="audioPrompt">
+        <h3>🎵 Immersive Experience</h3>
+        <p>Enable ambient sounds for the full horror atmosphere experience.</p>
+        <button onclick="enableAudio()">🔊 Enable Audio</button>
+    </div>
+
+    <!-- Enhanced Controls -->
+    <div class="controls">
+        <div class="control-button flashlight-on" id="flashlightBtn" onclick="toggleFlashlight()">
+            <span class="icon">💡</span>
+            <span class="label">Toggle Flashlight</span>
+        </div>
+        <div class="control-button" id="musicBtn" onclick="toggleMusic()">
+            <span class="icon">🎵</span>
+            <span class="label">Toggle Music</span>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo">Echoes of the Forbidden</div>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#concept">Concept</a></li>
+                <li><a href="#team">Core Team</a></li>
+                <li><a href="#trailer">Trailer</a></li>
+                <li><a href="#market">Market</a></li>
+                <li><a href="#financials">Financials</a></li>
+                <li><a href="#franchise">Franchise</a></li>
+                <li><a href="#invest">Invest</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="section hero">
+            <h1>Echoes of the Forbidden</h1>
+            <p class="subtitle">India's First Cinematic Horror Game Franchise - A 3-hour intense single-player experience that blends psychological horror, voice-controlled rituals, and AI-driven hallucinations based on Kerala's ancient Yakshi legends.</p>
+            
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <span class="stat-number animated-number" data-target="4">0</span>
+                    <span class="stat-label">Hours Gameplay</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">₹<span class="animated-number" data-target="1.72">0</span>Cr</span>
+                    <span class="stat-label">Investment Required</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number animated-number" data-target="18">0</span>
+                    <span class="stat-label">Months Timeline</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">₹<span class="animated-number" data-target="16">0</span>Cr</span>
+                    <span class="stat-label">Projected Revenue</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="concept" class="section">
+            <h2>Concept & Innovation</h2>
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Cultural Authenticity</h3>
+                    <p>Based on Kerala's ancient Yakshi legends, temple rituals, and tantric lore. The first game to authentically represent Indian folklore in horror gaming with meticulous research and cultural consultation.</p>
+                </div>
+                <div class="content-card">
+                    <h3>Voice-Controlled Rituals</h3>
+                    <p>Players must chant mantras correctly to progress. Voice failure results in ritual resets and spirit rage. Revolutionary gameplay mechanic that transforms your voice into a weapon against darkness.</p>
+                </div>
+                <div class="content-card">
+                    <h3>Adaptive AI Horror</h3>
+                    <p>The game's AI observes player behavior to deliver personalized, procedural hallucinations. Fear becomes personal as the system learns your deepest anxieties and exploits them.</p>
+                </div>
+                <div class="content-card">
+                    <h3>Real-World Integration</h3>
+                    <p>Sends messages to player's WhatsApp and requires visiting real websites to discover mantras. Gaming meets reality in unprecedented ways that blur the line between fiction and truth.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="section">
+            <h2>Core Team</h2>
+            <div class="content-grid">
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>Sarath Sankar</h3>
+                        <span class="role">Founder & Technical Director</span>
+                    </div>
+                    <p>17 years of 3D and VFX expertise with meticulous attention to detail and photorealistic 3D recreation. Multi-disciplinary talent spanning coding, video production, and technical leadership.</p>
+                </div>
+                
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>Jeo Baby</h3>
+                        <span class="role">Story & Screenplay</span>
+                    </div>
+                    <p>Acclaimed Malayalam filmmaker with multiple Kerala State Film Awards including <strong>Best Film and Best Screenplay for "The Great Indian Kitchen"</strong>. Also won Special Jury Award for "Freedom Fight" and Best Director for "Kaathal – The Core".</p>
+                </div>
+
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>MC Jithin</h3>
+                        <span class="role">Direction Assistance</span>
+                    </div>
+                    <p>Indian film director, screenwriter, and educator from Kerala. Notable works include "Nonsense" (2018), critiquing the education system, and "Sookshmadarshini" (2024), a critically acclaimed psychological thriller.</p>
+                </div>
+
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>Mathews Pulickan</h3>
+                        <span class="role">Game Music & Scores</span>
+                    </div>
+                    <p>Award-winning music composer recognized for his background score in "Kaathal - The Core", winning the <strong>Kerala State Film Award for Best Music Direction (Background Score) in 2024</strong>.</p>
+                </div>
+
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>Aswathy Gireesh</h3>
+                        <span class="role">3D Generalist</span>
+                    </div>
+                    <p>Multi-talented 3D artist, painter, and generative AI expert with exceptional attention to detail and expertise in photorealistic asset creation.</p>
+                </div>
+
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>Akshaya HN</h3>
+                        <span class="role">3D Asset Specialist</span>
+                    </div>
+                    <p>Blender and game asset creation expert with advanced geometry node expertise and strong motion design skillset for dynamic game environments.</p>
+                </div>
+
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>Sreedevan D</h3>
+                        <span class="role">Unreal Developer</span>
+                    </div>
+                    <p>Passionate Unreal Engine developer with a fervent dedication to creating captivating and immersive gaming experiences through cutting-edge technology.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="trailer" class="section">
+            <h2>Game Trailer</h2>
+            <div class="trailer-container">
+                <div class="video-wrapper">
+                    <video class="game-trailer" id="gameTrailer" controls preload="metadata">
+                        <source src="trailer.mp4" type="video/mp4">
+                        <p>Your browser does not support the video tag. Please use a modern browser to view the trailer.</p>
+                    </video>
+                    <div class="trailer-overlay"></div>
+                </div>
+                <div class="trailer-info">
+                    <p>Experience the atmospheric horror and innovative voice-controlled gameplay in our official game trailer.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="section">
+            <h2>Market Opportunity</h2>
+            <div class="chart-container">
+                <h3 style="color: #8A2BE2; margin-bottom: 2rem; font-size: 1.5rem;">Target Audience Penetration</h3>
+                <div style="margin: 2rem 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="font-size: 1.1rem;">Global Horror Gaming Market</span>
+                        <span style="color: #8A2BE2; font-weight: bold;">65%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                </div>
+                <div style="margin: 2rem 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="font-size: 1.1rem;">Indian Gaming Market (PC/Console)</span>
+                        <span style="color: #8A2BE2; font-weight: bold;">45%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%;"></div>
+                    </div>
+                </div>
+                <div style="margin: 2rem 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="font-size: 1.1rem;">Streamers & Content Creators</span>
+                        <span style="color: #8A2BE2; font-weight: bold;">55%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 55%;"></div>
+                    </div>
+                </div>
+                <div style="margin: 2rem 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="font-size: 1.1rem;">Cultural Horror Enthusiasts</span>
+                        <span style="color: #8A2BE2; font-weight: bold;">35%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 35%;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="section">
+            <h2>Financial Projections</h2>
+            <div class="chart-container">
+                <h3 style="color: #8A2BE2; margin-bottom: 2rem; font-size: 1.5rem; text-align: center;">Revenue Projections (12 Months)</h3>
+                <div class="revenue-bars">
+                    <div class="revenue-bar" data-label="Year 1 Core" data-value="₹15Cr" data-height="180"></div>
+                    <div class="revenue-bar" data-label="Add-On Revenue" data-value="₹1Cr" data-height="50"></div>
+                    <div class="revenue-bar" data-label="Total Revenue" data-value="₹16Cr" data-height="220"></div>
+                </div>
+                <p style="text-align: center; margin-top: 3rem; color: #ccc; font-size: 1.1rem;">
+                    Break-even within 6 months | Target: 1 Lakh units at ₹1,499 each
+                </p>
+            </div>
+
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Total Investment Required</h3>
+                    <p><strong style="color: #8A2BE2; font-size: 1.3rem;">₹1.72 Crores (18 Months)</strong></p>
+                    <ul style="margin-top: 1.5rem; color: #ddd; line-height: 1.8;">
+                        <li>Core Team & Development: ₹1.09 Crores</li>
+                        <li>Infrastructure & Equipment: ₹37 Lakhs</li>
+                        <li>Creative & Marketing: ₹9.5 Lakhs</li>
+                        <li>Contingency Buffer (10%): ₹16 Lakhs</li>
+                    </ul>
+                </div>
+                <div class="content-card">
+                    <h3>Revenue Streams</h3>
+                    <ul style="color: #ddd; line-height: 2;">
+                        <li><strong>Core Game Sales:</strong> ₹15 Crores (1L units)</li>
+                        <li><strong>Limited Edition Merch:</strong> ₹50 Lakhs</li>
+                        <li><strong>WhatsApp ARG Unlocks:</strong> ₹20 Lakhs</li>
+                        <li><strong>OTT & Licensing:</strong> ₹30 Lakhs</li>
+                        <li><strong>Year 1 Profit:</strong> ₹14.44 Crores</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="franchise" class="section">
+            <h2>Franchise Evolution</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Chapter 1: Whispers of the Serpent Grove</h4>
+                        <p>Launch flagship game featuring Yakshi legends and voice-controlled ritual mechanics. Establish the core gameplay loop and AI horror engine.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Chapter 2: Shadows of the Sacred Forest</h4>
+                        <p>Expand universe with forest-based mysteries, missing persons investigations, and deeper ritual complexity.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Chapter 3: Echoes of Colonial Darkness</h4>
+                        <p>Explore colonial-era supernatural conflicts, stolen mantras, and the clash between Western occultism and ancient Indian practices.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h4>Transmedia Universe Expansion</h4>
+                        <p>VR ritual experiences, animated folklore series, interactive podcasts, and comprehensive ARG campaigns across digital platforms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="invest" class="section cta">
+            <h2>Join the Ritual</h2>
+            <p style="font-size: 1.4rem; margin-bottom: 3rem; position: relative; z-index: 2; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                We are not merely selling entertainment. We are crafting a gateway between worlds, where ancient wisdom meets cutting-edge technology, and players become participants in rituals that have echoed through centuries.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; margin: 4rem 0; position: relative; z-index: 2;">
+                <div style="text-align: center;">
+                    <h3 style="color: #8A2BE2; margin-bottom: 1.5rem; font-size: 1.4rem;">Proven Investment Model</h3>
+                    <p style="line-height: 1.6;">₹1.72 Cr investment with 18-month development timeline targeting ₹16 Cr revenue and ₹14.44 Cr profit in Year 1.</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3 style="color: #8A2BE2; margin-bottom: 1.5rem; font-size: 1.4rem;">Viral Innovation Stack</h3>
+                    <p style="line-height: 1.6;">Voice-controlled rituals, WhatsApp ARG unlocks, AI-driven jump scares, and real-world integration create unprecedented shareability.</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3 style="color: #8A2BE2; margin-bottom: 1.5rem; font-size: 1.4rem;">Multi-Revenue Channels</h3>
+                    <p style="line-height: 1.6;">Core game sales, limited edition merch, OTT licensing, and franchise expansion create sustainable revenue streams.</p>
+                </div>
+            </div>
+            <a href="#" class="cta-button">Invest in the Future of Horror</a>
+        </section>
+    </main>
+
+    <script>
+        // Global Variables
+        let flashlightEnabled = true;
+        let musicEnabled = false;
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+        let hasPlayedScream = false;
+        let hasInteracted = false;
+        let isMobile = false;
+        let originalVolumes = {};
+        let isInTrailerSection = false;
+        let trailerSectionObserver = null;
+        let eventListenersAdded = false;
+        let lastScrollY = 0;
+        let lastJumpScare = 0;
+
+        // Interval IDs for cleanup
+        let crowSoundInterval;
+        let lightningInterval;
+        let glitchInterval;
+
+        // Audio Elements
+        const bgMusic = document.getElementById('bgMusic');
+        const rainSound = document.getElementById('rainSound');
+        const thunderSound = document.getElementById('thunderSound');
+        const screamSound = document.getElementById('screamSound');
+        const crowSound = document.getElementById('crowSound');
+        const gameTrailer = document.getElementById('gameTrailer');
+
+        // Observers
+        let observer;
+        let progressObserver;
+        let revenueObserver;
+
+        // Detect Mobile Device
+        function detectMobile() {
+            isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            return isMobile;
+        }
+
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+
+        // Better audio initialization with error handling
+        function initializeAudio() {
+            const audioElements = {
+                bgMusic: document.getElementById('bgMusic'),
+                rainSound: document.getElementById('rainSound'),
+                thunderSound: document.getElementById('thunderSound'),
+                screamSound: document.getElementById('screamSound'),
+                crowSound: document.getElementById('crowSound')
+            };
+
+            // Check if audio files exist and add error listeners
+            Object.entries(audioElements).forEach(([key, element]) => {
+                if (element) {
+                    element.addEventListener('error', (e) => {
+                        console.log(`Audio file not found: ${key}`);
+                        // Disable audio-related functionality if files are missing
+                        if (key === 'bgMusic' || key === 'rainSound') {
+                            musicEnabled = false;
+                            const musicBtn = document.getElementById('musicBtn');
+                            if (musicBtn) {
+                                musicBtn.style.display = 'none';
+                            }
+                        }
+                    });
+
+                    element.addEventListener('canplaythrough', () => {
+                        console.log(`Audio loaded successfully: ${key}`);
+                    });
+                }
+            });
+
+            // Set up original volumes only for existing audio elements
+            originalVolumes = {};
+            Object.entries(audioElements).forEach(([key, element]) => {
+                if (element) {
+                    originalVolumes[key] = element.volume || 0.5;
+                }
+            });
+        }
+
+        // Enhanced Functions
+        function toggleFlashlight() {
+            // Don't allow manual toggle in trailer section
+            if (isInTrailerSection) {
+                console.log('Flashlight toggle disabled in trailer section');
+                return;
+            }
+            
+            flashlightEnabled = !flashlightEnabled;
+            const overlay = document.querySelector('.flashlight-overlay');
+            const beam = document.querySelector('.flashlight-beam');
+            const flashlightBtn = document.getElementById('flashlightBtn');
+            
+            console.log('Flashlight toggled:', flashlightEnabled);
+            
+            if (flashlightEnabled) {
+                if (overlay) {
+                    overlay.classList.remove('disabled');
+                    overlay.style.opacity = '1';
+                }
+                if (beam) {
+                    beam.style.opacity = '0.6';
+                    beam.style.display = 'block';
+                }
+                if (flashlightBtn) {
+                    flashlightBtn.classList.remove('flashlight-off');
+                    flashlightBtn.classList.add('flashlight-on');
+                }
+                updateHiddenElements();
+            } else {
+                if (overlay) {
+                    overlay.classList.add('disabled');
+                    overlay.style.opacity = '0';
+                }
+                if (beam) {
+                    beam.style.opacity = '0';
+                }
+                if (flashlightBtn) {
+                    flashlightBtn.classList.remove('flashlight-on');
+                    flashlightBtn.classList.add('flashlight-off');
+                }
+                hideAllElements();
+            }
+            
+            // Update stored state
+            if (window.trailerModeStates) {
+                window.trailerModeStates.flashlightWasEnabled = flashlightEnabled;
+            }
+            
+            if (!hasInteracted) enableAudio();
+        }
+
+        function toggleMusic() {
+            // Don't allow manual toggle in trailer section
+            if (isInTrailerSection) {
+                console.log('Music toggle disabled in trailer section');
+                return;
+            }
+            
+            musicEnabled = !musicEnabled;
+            const musicBtn = document.getElementById('musicBtn');
+            
+            console.log('Music toggled:', musicEnabled);
+            
+            if (musicEnabled) {
+                if (musicBtn) {
+                    musicBtn.classList.remove('music-off');
+                    musicBtn.classList.add('music-on');
+                }
+                // Only play if not in trailer section
+                if (hasInteracted && !isInTrailerSection) {
+                    if (bgMusic && bgMusic.readyState >= 2) {
+                        bgMusic.volume = originalVolumes.bgMusic || 0.5;
+                        bgMusic.play().catch(e => console.log('Background music not available'));
+                    }
+                    if (rainSound && rainSound.readyState >= 2) {
+                        rainSound.volume = originalVolumes.rainSound || 0.3;
+                        rainSound.play().catch(e => console.log('Rain sound not available'));
+                    }
+                }
+            } else {
+                if (musicBtn) {
+                    musicBtn.classList.remove('music-on');
+                    musicBtn.classList.add('music-off');
+                }
+                if (bgMusic) bgMusic.pause();
+                if (rainSound) rainSound.pause();
+            }
+            
+            // Update stored state
+            if (window.trailerModeStates) {
+                window.trailerModeStates.musicWasEnabled = musicEnabled;
+            }
+        }
+
+        // Enhanced enableAudio function
+        function enableAudio() {
+            hasInteracted = true;
+            const audioPrompt = document.getElementById('audioPrompt');
+            if (audioPrompt) {
+                audioPrompt.style.display = 'none';
+            }
+            
+            // Enable music by default when audio is enabled
+            musicEnabled = true;
+            const musicBtn = document.getElementById('musicBtn');
+            if (musicBtn) {
+                musicBtn.classList.remove('music-off');
+                musicBtn.classList.add('music-on');
+            }
+            
+            console.log('Audio enabled - Music state:', musicEnabled);
+            
+            // Only play audio if elements exist and are ready
+            if (bgMusic && bgMusic.readyState >= 2) {
+                bgMusic.volume = originalVolumes.bgMusic || 0.5;
+                bgMusic.play().catch(e => console.log('Background music not available'));
+            }
+            
+            if (rainSound && rainSound.readyState >= 2) {
+                rainSound.volume = originalVolumes.rainSound || 0.3;
+                rainSound.play().catch(e => console.log('Rain sound not available'));
+            }
+        }
+
+        // Better event listener management
+        function addEventListeners() {
+            if (eventListenersAdded) return;
+            
+            // Mouse movement
+            document.addEventListener('mousemove', handleMouseMove);
+            
+            // Scroll events
+            window.addEventListener('scroll', handleScroll);
+            
+            // Smooth scrolling navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', handleAnchorClick);
+            });
+            
+            // Window events
+            window.addEventListener('beforeunload', cleanup);
+            window.addEventListener('resize', handleResize);
+            
+            eventListenersAdded = true;
+        }
+
+        function handleMouseMove(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            const mouseXPercent = (mouseX / window.innerWidth) * 100;
+            const mouseYPercent = (mouseY / window.innerHeight) * 100;
+            
+            document.documentElement.style.setProperty('--mouse-x', mouseXPercent + '%');
+            document.documentElement.style.setProperty('--mouse-y', mouseYPercent + '%');
+            
+            if (Math.random() > 0.85) {
+                createDust(mouseX, mouseY);
+            }
+            
+            if (flashlightEnabled) {
+                updateHiddenElements();
+            }
+            
+            // Only show audio prompt if not interacted
+            if (!hasInteracted) {
+                const audioPrompt = document.getElementById('audioPrompt');
+                if (audioPrompt) {
+                    audioPrompt.style.display = 'block';
+                }
+            }
+        }
+
+        // Consolidated scroll handler
+        function handleScroll() {
+            const scrolled = window.pageYOffset;
+            const currentScrollY = window.scrollY;
+            const currentTime = Date.now();
+            
+            // Vignette effect
+            const vignette = document.querySelector('.vignette');
+            const intensity = Math.min(scrolled / 1000, 0.6);
+            if (vignette) {
+                vignette.style.background = `radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, ${intensity}) 100%)`;
+            }
+            
+            // Header hide/show
+            const header = document.querySelector('header');
+            if (header) {
+                if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    header.style.transform = 'translateY(0)';
+                }
+            }
+            
+            // Trigger scream at end
+            if (!hasPlayedScream && 
+                (window.innerHeight + scrolled) >= document.body.offsetHeight - 100 && 
+                hasInteracted && 
+                musicEnabled && 
+                screamSound && 
+                (!gameTrailer || gameTrailer.paused)) {
+                screamSound.play().catch(e => console.log('Scream sound not available'));
+                hasPlayedScream = true;
+            }
+            
+            // Jump scare logic
+            if (currentTime - lastJumpScare > 20000 && 
+                Math.random() > 0.995 && 
+                hasInteracted && 
+                !isInTrailerSection) {
+                triggerFlashlightJumpScare();
+                lastJumpScare = currentTime;
+            }
+            
+            lastScrollY = currentScrollY;
+        }
+
+        function handleAnchorClick(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        function handleResize() {
+            // Update mobile detection on resize
+            isMobile = detectMobile();
+            
+            // Adjust flashlight for mobile
+            if (isMobile && flashlightEnabled) {
+                toggleFlashlight();
+            }
+        }
+
+        function updateCursor() {
+            const speed = 0.2;
+            cursorX += (mouseX - cursorX) * speed;
+            cursorY += (mouseY - cursorY) * speed;
+            
+            if (cursor) {
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+            }
+            
+            requestAnimationFrame(updateCursor);
+        }
+
+        function createDust(x, y) {
+            const dust = document.createElement('div');
+            dust.className = 'dust';
+            dust.style.left = x + Math.random() * 20 - 10 + 'px';
+            dust.style.top = y + Math.random() * 20 - 10 + 'px';
+            document.body.appendChild(dust);
+            
+            setTimeout(() => dust.remove(), 2000);
+        }
+
+        // Create Random Fog
+        function createFog() {
+            const fogOverlay = document.querySelector('.fog-overlay');
+            if (!fogOverlay) return;
+            
+            const fogCount = 8;
+            for (let i = 0; i < fogCount; i++) {
+                const fog = document.createElement('div');
+                fog.className = 'fog-particle';
+                
+                // Random size
+                const sizes = ['small', 'medium', 'large'];
+                const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+                fog.classList.add(randomSize);
+                
+                // Random speed
+                const speeds = ['slow', 'fast'];
+                const randomSpeed = speeds[Math.floor(Math.random() * speeds.length)];
+                fog.classList.add(randomSpeed);
+                
+                // Random vertical position
+                fog.style.top = Math.random() * 100 + '%';
+                
+                // Random animation delay
+                fog.style.animationDelay = Math.random() * 10 + 's';
+                
+                fogOverlay.appendChild(fog);
+            }
+        }
+
+        // Continuous fog generation
+        function startFogGeneration() {
+            setInterval(() => {
+                const fogOverlay = document.querySelector('.fog-overlay');
+                if (!fogOverlay) return;
+                
+                // Create new fog particle
+                const fog = document.createElement('div');
+                fog.className = 'fog-particle';
+                
+                // Random size
+                const sizes = ['small', 'medium', 'large'];
+                const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+                fog.classList.add(randomSize);
+                
+                // Random speed
+                const speeds = ['slow', 'fast'];
+                const randomSpeed = speeds[Math.floor(Math.random() * speeds.length)];
+                fog.classList.add(randomSpeed);
+                
+                // Random vertical position
+                fog.style.top = Math.random() * 100 + '%';
+                
+                fogOverlay.appendChild(fog);
+                
+                // Remove fog particle after animation
+                setTimeout(() => {
+                    if (fog.parentNode) {
+                        fog.parentNode.removeChild(fog);
+                    }
+                }, 25000);
+            }, 3000 + Math.random() * 5000); // Every 3-8 seconds
+        }
+
+        function updateHiddenElements() {
+            if (!flashlightEnabled) return;
+            
+            const elements = document.querySelectorAll('.hidden-element');
+            const radius = 900;
+            
+            elements.forEach(element => {
+                const rect = element.getBoundingClientRect();
+                const elementX = rect.left + rect.width / 2;
+                const elementY = rect.top + rect.height / 2;
+                
+                const distance = Math.sqrt(Math.pow(mouseX - elementX, 2) + Math.pow(mouseY - elementY, 2));
+                
+                if (distance < radius) {
+                    element.classList.add('revealed');
+                    if (Math.random() > 0.998 && distance < radius / 2) {
+                        triggerMiniJumpScare(element);
+                    }
+                } else {
+                    element.classList.remove('revealed');
+                }
+            });
+        }
+
+        function hideAllElements() {
+            const elements = document.querySelectorAll('.hidden-element');
+            elements.forEach(element => element.classList.remove('revealed'));
+        }
+
+        function triggerMiniJumpScare(element) {
+            element.style.transform = 'scale(2)';
+            element.style.color = '#ff0000';
+            element.style.zIndex = '9999';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+                element.style.color = '#ff4444';
+                element.style.zIndex = '50';
+            }, 300);
+        }
+
+        // Create Stars
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            if (!starsContainer) return;
+            
+            const starCount = 150;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Create Rain
+        function createRain() {
+            const rainOverlay = document.querySelector('.rain-overlay');
+            if (!rainOverlay) return;
+            
+            const raindropCount = 100;
+            for (let i = 0; i < raindropCount; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                raindrop.style.left = Math.random() * 100 + '%';
+                raindrop.style.animationDelay = Math.random() * 2 + 's';
+                raindrop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                rainOverlay.appendChild(raindrop);
+            }
+        }
+
+        // Fixed interval-based effects (no more recursive setTimeout)
+        function startCrowSound() {
+            if (crowSoundInterval) clearInterval(crowSoundInterval);
+            
+            crowSoundInterval = setInterval(() => {
+                // Don't play crow sounds while trailer is playing
+                if (gameTrailer && !gameTrailer.paused) return;
+                
+                if (hasInteracted && musicEnabled && crowSound && Math.random() > 0.85) {
+                    crowSound.currentTime = 0;
+                    crowSound.volume = originalVolumes.crowSound || 0.2 + Math.random() * 0.5;
+                    crowSound.play().catch(e => console.log('Crow sound not available'));
+                }
+            }, 8000 + Math.random() * 15000);
+        }
+
+        function startLightning() {
+            if (lightningInterval) clearInterval(lightningInterval);
+            
+            lightningInterval = setInterval(() => {
+                if (isInTrailerSection) return;
+                
+                if (Math.random() > 0.94) {
+                    const lightningBolts = document.querySelectorAll('.lightning-bolt');
+                    const lightningFlash = document.querySelector('.lightning-flash');
+                    
+                    // Create random lightning bolts
+                    lightningBolts.forEach((bolt, index) => {
+                        if (Math.random() > 0.4) {
+                            const startX = Math.random() * 100;
+                            const startY = 0;
+                            const endY = Math.random() * 80 + 20;
+                            const zigzag = Math.random() * 60 - 30;
+                            
+                            bolt.style.left = startX + '%';
+                            bolt.style.top = startY + '%';
+                            bolt.style.height = endY + '%';
+                            bolt.style.transform = `skewX(${zigzag}deg)`;
+                            bolt.classList.add('active');
+                            
+                            setTimeout(() => {
+                                bolt.classList.remove('active');
+                            }, 400);
+                        }
+                    });
+                    
+                    // Enhanced flash effect
+                    if (lightningFlash) {
+                        lightningFlash.classList.add('active');
+                        setTimeout(() => {
+                            lightningFlash.classList.remove('active');
+                        }, 500);
+                    }
+                    
+                    // Thunder sound with slight delay for realism
+                    if (hasInteracted && musicEnabled && thunderSound && (!gameTrailer || gameTrailer.paused)) {
+                        setTimeout(() => {
+                            thunderSound.currentTime = 0;
+                            thunderSound.volume = originalVolumes.thunderSound || 0.3 + Math.random() * 0.4;
+                            thunderSound.play().catch(e => console.log('Thunder sound not available'));
+                        }, 100 + Math.random() * 800);
+                    }
+                }
+            }, 2000 + Math.random() * 8000);
+        }
+
+        function startGlitchEffects() {
+            if (glitchInterval) clearInterval(glitchInterval);
+            
+            glitchInterval = setInterval(() => {
+                if (isInTrailerSection) return;
+                
+                if (Math.random() > 0.98) {
+                    const glitchOverlay = document.querySelector('.glitch-overlay');
+                    const title = document.querySelector('.hero h1');
+                    
+                    // Visual glitch overlay
+                    if (glitchOverlay) {
+                        glitchOverlay.classList.add('active');
+                        setTimeout(() => {
+                            glitchOverlay.classList.remove('active');
+                        }, 300);
+                    }
+                    
+                    // Text glitch effect
+                    if (title) {
+                        title.classList.add('glitch-text');
+                        title.style.textShadow = '3px 0 #ff0000, -3px 0 #00ff00, 0 0 30px #8A2BE2';
+                        setTimeout(() => {
+                            title.classList.remove('glitch-text');
+                            title.style.textShadow = '0 0 30px #8A2BE2, 0 0 40px #8A2BE2';
+                        }, 300);
+                    }
+                }
+            }, 5000 + Math.random() * 10000);
+        }
+
+        // Cleanup function
+        function stopAllEffects() {
+            if (crowSoundInterval) clearInterval(crowSoundInterval);
+            if (lightningInterval) clearInterval(lightningInterval);
+            if (glitchInterval) clearInterval(glitchInterval);
+        }
+
+        // Trailer Section Observer
+        function setupTrailerSectionObserver() {
+            const trailerSection = document.getElementById('trailer');
+            if (!trailerSection) return;
+
+            trailerSectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const wasInTrailerSection = isInTrailerSection;
+                    isInTrailerSection = entry.isIntersecting;
+                    
+                    console.log('Trailer section visible:', isInTrailerSection);
+                    
+                    // Only trigger changes if the state actually changed
+                    if (wasInTrailerSection !== isInTrailerSection) {
+                        if (isInTrailerSection) {
+                            // Entering trailer section
+                            console.log('Entering trailer section - disabling effects');
+                            disableEffectsForTrailer();
+                        } else {
+                            // Leaving trailer section
+                            console.log('Leaving trailer section - enabling effects');
+                            enableEffectsAfterTrailer();
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.3 // Trigger when 30% of trailer section is visible
+            });
+
+            trailerSectionObserver.observe(trailerSection);
+        }
+
+        // Disable effects when entering trailer section
+        function disableEffectsForTrailer() {
+            // Store current states
+            const wasFlashlightEnabled = flashlightEnabled;
+            const wasMusicEnabled = musicEnabled;
+            
+            // Disable flashlight
+            if (flashlightEnabled) {
+                const overlay = document.querySelector('.flashlight-overlay');
+                const beam = document.querySelector('.flashlight-beam');
+                const flashlightBtn = document.getElementById('flashlightBtn');
+                
+                if (overlay) {
+                    overlay.style.transition = 'opacity 1s ease';
+                    overlay.style.opacity = '0';
+                }
+                if (beam) {
+                    beam.style.transition = 'opacity 1s ease';
+                    beam.style.opacity = '0';
+                }
+                if (flashlightBtn) {
+                    flashlightBtn.style.opacity = '0.3';
+                    flashlightBtn.style.pointerEvents = 'none';
+                }
+                
+                // Hide all hidden elements
+                hideAllElements();
+            }
+            
+            // Fade out ambient sounds
+            if (musicEnabled && hasInteracted) {
+                fadeOutBackgroundAudio();
+            }
+            
+            // Store states for restoration
+            window.trailerModeStates = {
+                flashlightWasEnabled: wasFlashlightEnabled,
+                musicWasEnabled: wasMusicEnabled
+            };
+        }
+
+        // Enable effects when leaving trailer section
+        function enableEffectsAfterTrailer() {
+            const storedStates = window.trailerModeStates || {
+                flashlightWasEnabled: true,
+                musicWasEnabled: true
+            };
+            
+            // Restore flashlight if it was enabled
+            if (storedStates.flashlightWasEnabled) {
+                const overlay = document.querySelector('.flashlight-overlay');
+                const beam = document.querySelector('.flashlight-beam');
+                const flashlightBtn = document.getElementById('flashlightBtn');
+                
+                if (overlay) {
+                    overlay.style.transition = 'opacity 1s ease';
+                    overlay.style.opacity = '1';
+                }
+                if (beam) {
+                    beam.style.transition = 'opacity 1s ease';
+                    beam.style.opacity = '0.6';
+                }
+                if (flashlightBtn) {
+                    flashlightBtn.style.opacity = '0.7';
+                    flashlightBtn.style.pointerEvents = 'auto';
+                }
+                
+                // Update hidden elements
+                updateHiddenElements();
+            }
+            
+            // Restore ambient sounds if music was enabled
+            if (storedStates.musicWasEnabled && hasInteracted) {
+                setTimeout(() => {
+                    fadeInBackgroundAudio();
+                }, 500);
+            }
+        }
+
+        // Enhanced trailer container hover effects
+        function setupTrailerHoverEffects() {
+            const trailerContainer = document.querySelector('.trailer-container');
+            if (!trailerContainer) return;
+
+            trailerContainer.addEventListener('mouseenter', () => {
+                // Additional dimming effect on hover
+                const overlay = document.querySelector('.flashlight-overlay');
+                const beam = document.querySelector('.flashlight-beam');
+                
+                if (overlay) {
+                    overlay.style.transition = 'opacity 0.5s ease';
+                    overlay.style.opacity = '0';
+                }
+                if (beam) {
+                    beam.style.transition = 'opacity 0.5s ease';
+                    beam.style.opacity = '0';
+                }
+            });
+
+            trailerContainer.addEventListener('mouseleave', () => {
+                // Only restore if not in trailer section
+                if (!isInTrailerSection) {
+                    const overlay = document.querySelector('.flashlight-overlay');
+                    const beam = document.querySelector('.flashlight-beam');
+                    const storedStates = window.trailerModeStates || { flashlightWasEnabled: true };
+                    
+                    if (storedStates.flashlightWasEnabled) {
+                        if (overlay) {
+                            overlay.style.transition = 'opacity 0.5s ease';
+                            overlay.style.opacity = '1';
+                        }
+                        if (beam) {
+                            beam.style.transition = 'opacity 0.5s ease';
+                            beam.style.opacity = '0.6';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Trailer Audio Management
+        function setupTrailerAudioControl() {
+            if (!gameTrailer) return;
+
+            // When trailer starts playing
+            gameTrailer.addEventListener('play', () => {
+                console.log('Trailer started - muting background audio');
+                fadeOutBackgroundAudio();
+            });
+
+            // When trailer pauses
+            gameTrailer.addEventListener('pause', () => {
+                console.log('Trailer paused - restoring background audio');
+                fadeInBackgroundAudio();
+            });
+
+            // When trailer ends
+            gameTrailer.addEventListener('ended', () => {
+                console.log('Trailer ended - restoring background audio');
+                fadeInBackgroundAudio();
+            });
+        }
+
+        function fadeOutBackgroundAudio() {
+            if (!musicEnabled) return;
+
+            const audioElements = [bgMusic, rainSound];
+            audioElements.forEach(audio => {
+                if (audio && !audio.paused) {
+                    const fadeOut = setInterval(() => {
+                        if (audio.volume > 0.05) {
+                            audio.volume = Math.max(0, audio.volume - 0.05);
+                        } else {
+                            audio.volume = 0;
+                            clearInterval(fadeOut);
+                        }
+                    }, 50);
+                }
+            });
+        }
+
+        function fadeInBackgroundAudio() {
+            if (!musicEnabled) return;
+
+            setTimeout(() => {
+                const audioElements = [
+                    { element: bgMusic, targetVolume: originalVolumes.bgMusic || 0.5 },
+                    { element: rainSound, targetVolume: originalVolumes.rainSound || 0.3 }
+                ];
+
+                audioElements.forEach(({ element, targetVolume }) => {
+                    if (element && !element.paused) {
+                        element.volume = 0;
+                        const fadeIn = setInterval(() => {
+                            if (element.volume < targetVolume - 0.02) {
+                                element.volume = Math.min(targetVolume, element.volume + 0.01);
+                            } else {
+                                element.volume = targetVolume;
+                                clearInterval(fadeIn);
+                            }
+                        }, 40);
+                    }
+                });
+            }, 500);
+        }
+
+        // Jump Scares
+        const jumpscareElement = document.querySelector('.jumpscare');
+        const jumpscareTexts = ['👁️', '🐍', '⚡', '🔥', '💀', '🕷️', '🦇'];
+
+        function triggerFlashlightJumpScare() {
+            const beam = document.querySelector('.flashlight-beam');
+            const overlay = document.querySelector('.flashlight-overlay');
+            
+            if (beam) beam.style.opacity = '0';
+            if (overlay) overlay.style.opacity = '0';
+            
+            setTimeout(() => {
+                if (jumpscareElement) {
+                    const randomText = jumpscareTexts[Math.floor(Math.random() * jumpscareTexts.length)];
+                    jumpscareElement.textContent = randomText;
+                    jumpscareElement.classList.add('active');
+                    
+                    setTimeout(() => {
+                        jumpscareElement.classList.remove('active');
+                        if (beam) beam.style.opacity = '0.6';
+                        if (overlay) overlay.style.opacity = '1';
+                    }, 400);
+                }
+            }, 150);
+        }
+
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        function setupObservers() {
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        const animatedNumbers = entry.target.querySelectorAll('.animated-number');
+                        animatedNumbers.forEach(number => {
+                            animateNumber(number);
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            // Observe sections
+            document.querySelectorAll('.section').forEach(section => {
+                observer.observe(section);
+            });
+
+            // Progress Bar Animations
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const width = entry.target.style.width;
+                        entry.target.style.width = '0%';
+                        setTimeout(() => {
+                            entry.target.style.width = width;
+                        }, 500);
+                    }
+                });
+            }, observerOptions);
+
+            progressBars.forEach(bar => {
+                progressObserver.observe(bar);
+            });
+
+            // Revenue Bar Animations
+            const revenueBars = document.querySelectorAll('.revenue-bar');
+            revenueObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('animate')) {
+                        const bars = Array.from(revenueBars);
+                        const index = bars.indexOf(entry.target);
+                        
+                        setTimeout(() => {
+                            const height = entry.target.getAttribute('data-height') + 'px';
+                            entry.target.style.setProperty('--target-height', height);
+                            entry.target.classList.add('animate');
+                        }, index * 200);
+                    }
+                });
+            }, observerOptions);
+
+            revenueBars.forEach(bar => {
+                revenueObserver.observe(bar);
+            });
+        }
+
+        // Animated Number Counter
+        function animateNumber(element) {
+            const target = parseFloat(element.getAttribute('data-target'));
+            const duration = 2000;
+            const start = performance.now();
+            const startValue = 0;
+
+            function update(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const easeOutExpo = 1 - Math.pow(2, -10 * progress);
+                const current = startValue + (target - startValue) * easeOutExpo;
+                
+                if (target % 1 === 0) {
+                    element.textContent = Math.floor(current);
+                } else {
+                    element.textContent = current.toFixed(1);
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Advanced Hover Effects
+        function addAdvancedEffects() {
+            const cards = document.querySelectorAll('.content-card, .stat-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.filter = 'brightness(1.2) contrast(1.1) saturate(1.2)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.filter = 'brightness(1) contrast(1) saturate(1)';
+                });
+            });
+        }
+
+        // Sound Visualization Effect
+        function createSoundVisualizer() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.addEventListener('mouseenter', () => {
+                    const ripple = document.createElement('div');
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: radial-gradient(circle, rgba(138, 43, 226, 0.3), transparent);
+                        width: 100px;
+                        height: 100px;
+                        animation: ripple 1s ease-out forwards;
+                        pointer-events: none;
+                        z-index: -1;
+                    `;
+                    section.style.position = 'relative';
+                    section.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 1000);
+                });
+            });
+        }
+
+        // Cleanup function
+        function cleanup() {
+            stopAllEffects();
+            if (trailerSectionObserver) {
+                trailerSectionObserver.disconnect();
+            }
+            if (observer) {
+                observer.disconnect();
+            }
+            if (progressObserver) {
+                progressObserver.disconnect();
+            }
+            if (revenueObserver) {
+                revenueObserver.disconnect();
+            }
+        }
+
+        // Initialize All Effects
+        document.addEventListener('DOMContentLoaded', () => {
+            // Detect mobile and adjust flashlight
+            detectMobile();
+            if (isMobile) {
+                flashlightEnabled = false;
+                const overlay = document.querySelector('.flashlight-overlay');
+                const beam = document.querySelector('.flashlight-beam');
+                const flashlightBtn = document.getElementById('flashlightBtn');
+                
+                if (overlay) overlay.style.display = 'none';
+                if (beam) beam.style.display = 'none';
+                if (flashlightBtn) flashlightBtn.style.display = 'none';
+                
+                // Show all hidden elements on mobile
+                const hiddenElements = document.querySelectorAll('.hidden-element');
+                hiddenElements.forEach(element => {
+                    element.classList.add('revealed');
+                });
+            }
+            
+            // Initialize everything
+            initializeAudio();
+            addEventListeners();
+            setupObservers();
+            setupTrailerSectionObserver();
+            setupTrailerAudioControl();
+            setupTrailerHoverEffects(); // Add trailer hover effects
+            
+            createStars();
+            createRain();
+            createFog(); // Add initial fog
+            startFogGeneration(); // Start continuous fog generation
+            addAdvancedEffects();
+            createSoundVisualizer();
+            
+            // Start interval-based effects
+            startCrowSound();
+            startLightning();
+            startGlitchEffects();
+            
+            requestAnimationFrame(updateCursor);
+            updateHiddenElements();
+            
+            // Stagger stat card animations
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.3}s`;
+                card.style.animation = 'fadeInUp 1s ease forwards';
+            });
+            
+            // Randomize hidden element positions (only for desktop)
+            if (!isMobile) {
+                const hiddenElements = document.querySelectorAll('.hidden-element');
+                hiddenElements.forEach(element => {
+                    setInterval(() => {
+                        if (!element.classList.contains('revealed')) {
+                            element.style.top = Math.random() * 80 + 10 + '%';
+                            element.style.left = Math.random() * 80 + 10 + '%';
+                        }
+                    }, 20000 + Math.random() * 10000);
+                });
+            }
+        });
+
+        // Clean up when page unloads
+        window.addEventListener('beforeunload', cleanup);
+    </script>
+</body>
+</html>
