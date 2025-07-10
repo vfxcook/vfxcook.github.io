@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echoes of the Forbidden - Pitch Deck</title>
+    <title>Echoes of the Forbidden</title>
     <style>
         :root {
             --mouse-x: 50%;
@@ -40,7 +40,7 @@
                         rgba(255, 255, 150, 0.2) 30%,  /* Pale yellow outer */
                         rgba(0, 0, 0, 0.3) 35%,
                         rgba(0, 0, 0, 0.8) 55%,
-                        rgba(0, 0, 0, 0.98) 100%);
+                        rgba(0, 0, 0, 0.98) 90%);
             pointer-events: none;
             z-index: 100;
             transition: opacity 0.5s ease;
@@ -72,6 +72,80 @@
             97% { opacity: 0.6; }
             98% { opacity: 0.2; }
             99% { opacity: 0.6; }
+        }
+
+
+        /* Mobile Warning Overlay */
+        .mobile-warning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-warning-content {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(30, 30, 60, 0.95));
+            border: 2px solid #8A2BE2;
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            max-width: 90%;
+            box-shadow: 0 20px 60px rgba(138, 43, 226, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        .mobile-warning h2 {
+            color: #8A2BE2;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px #8A2BE2;
+        }
+
+        .mobile-warning p {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-warning .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .continue-anyway {
+            background: linear-gradient(45deg, #8A2BE2, #ff4444);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        .continue-anyway:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.5);
+        }
+
+        /* Hide main content on mobile until dismissed */
+        body.mobile-blocked main {
+            display: none;
+        }
+
+        body.mobile-blocked header {
+            display: none;
         }
 
         /* Custom Cursor with Magic Dust - Pale Yellow */
@@ -646,7 +720,7 @@
         }
 
         .logo::after {
-            content: '🐍';
+            content: '';
             position: absolute;
             left: -30px;
             animation: float 3s ease-in-out infinite;
@@ -809,6 +883,114 @@
             margin-top: 1rem;
             position: relative;
             z-index: 2;
+        }
+
+         /* Popup styling */
+        .stat-card {
+            position: relative; /* Make sure this is added to existing .stat-card */
+        }
+
+        .mechanics-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 40, 0.98);
+            border: 2px solid #8A2BE2;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 500px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(138, 43, 226, 0.5);
+        }
+
+        .mechanics-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mechanics-popup h3 {
+            color: #8A2BE2;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px #8A2BE2;
+        }
+
+        .mechanics-popup h4 {
+            color: #8A2BE2;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .mechanics-popup p {
+            color: #ddd;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .mechanics-popup ul {
+            color: #ddd;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mechanics-popup li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .mechanics-popup strong {
+            color: #ff4444;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #8A2BE2;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .popup-close:hover {
+            background: rgba(138, 43, 226, 0.2);
+            transform: scale(1.1);
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Animated Numbers */
@@ -1375,6 +1557,23 @@
         <source src="audio/crow.aac" type="audio/aac">
         <source src="audio/crow.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Mobile Warning -->
+    <div class="mobile-warning" id="mobileWarning">
+        <div class="mobile-warning-content">
+            <div class="icon">🖥️</div>
+            <h2>Desktop Experience Required</h2>
+            <p><strong>Echoes of the Forbidden</strong> is designed for an immersive desktop experience with:</p>
+            <ul style="text-align: left; margin: 1.5rem 0; color: #ccc;">
+                <li>🌌 Full-screen immersive graphics</li>
+                <li>💡 Interactive flashlight system</li>
+                <li>🎵 Atmospheric audio effects</li>
+                <li>🖱️ Precise mouse-based interactions</li>
+            </ul>
+            <p>For the best horror experience, please visit from a <strong>laptop or desktop computer</strong>.</p>
+            
+        </div>
+    </div>
     
     <!-- Audio Prompt -->
     <div class="audio-prompt" id="audioPrompt">
@@ -1399,15 +1598,15 @@
         <nav>
             <div class="logo">Echoes of the Forbidden</div>
             <ul class="nav-links">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#concept">Concept</a></li>
-                <li><a href="#team">Core Team</a></li>
-                <li><a href="#trailer">Trailer</a></li>
-                <li><a href="#market">Market</a></li>
-                <li><a href="#financials">Financials</a></li>
-                <li><a href="#franchise">Franchise</a></li>
-                <li><a href="#invest">Invest</a></li>
-            </ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#story">Story</a></li>
+            <li><a href="#concept">Features</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#trailer">Trailer</a></li>
+            <li><a href="#market">Market</a></li>
+            <li><a href="#franchise">Franchise</a></li>
+            <li><a href="#financials">Investment</a></li>
+        </ul>
         </nav>
     </header>
 
@@ -1422,44 +1621,72 @@
                     <span class="stat-label">Hours Gameplay</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">₹<span class="animated-number" data-target="1.72">0</span>Cr</span>
-                    <span class="stat-label">Investment Required</span>
+                    <span class="stat-number animated-number" data-target="19">0</span>
+                    <span class="stat-label">Months Production Timeline</span>
+                </div>
+                <div class="stat-card mechanics-card">
+                    <span class="stat-number animated-number" data-target="3">0</span>
+                    <span class="stat-label">Unique Mechanics</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number animated-number" data-target="18">0</span>
-                    <span class="stat-label">Months Timeline</span>
+                    <span class="stat-number">4X-7X</span>
+                    <span class="stat-label">Expected ROI</span>
                 </div>
-                <div class="stat-card">
-                    <span class="stat-number">₹<span class="animated-number" data-target="16">0</span>Cr</span>
-                    <span class="stat-label">Projected Revenue</span>
+            </div>
+        </section>
+
+        <section id="story" class="section">
+            <h2>The Legend Awakens</h2>
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>🐍 Ancient Kerala Folklore</h3>
+                    <p>Deep in the forbidden groves of Kerala, where ancient temples whisper secrets of the Yakshi - serpent spirits that seduce and destroy. Our story begins with Arjun, a young researcher who discovers his grandmother's hidden tantric manuscripts, revealing rituals that blur the line between protection and damnation.</p>
+                </div>
+                <div class="content-card">
+                    <h3>🕯️ The Ritual Gone Wrong</h3>
+                    <p>What started as academic curiosity becomes a nightmare when Arjun accidentally awakens Vasuki, a powerful Yakshi bound for centuries. Now trapped in a cycle of supernatural torment, he must master forbidden mantras to survive each night as reality itself begins to unravel.</p>
+                </div>
+                <div class="content-card">
+                    <h3>🌙 Three Nights of Terror</h3>
+                    <p>Each night brings new horrors as the Yakshi grows stronger, testing Arjun's sanity and resolve. Players must navigate through Kerala's haunted landscapes - from ancient temples to colonial mansions - while uncovering the truth behind his family's dark heritage.</p>
                 </div>
             </div>
         </section>
 
         <section id="concept" class="section">
-            <h2>Concept & Innovation</h2>
+            <h2>Revolutionary Game Features</h2>
             <div class="content-grid">
                 <div class="content-card">
-                    <h3>Cultural Authenticity</h3>
-                    <p>Based on Kerala's ancient Yakshi legends, temple rituals, and tantric lore. The first game to authentically represent Indian folklore in horror gaming with meticulous research and cultural consultation.</p>
+                    <h3>🎙️ Voice-Controlled Rituals</h3>
+                    <p>Players must chant mantras correctly to progress. Voice failure results in ritual resets and spirit rage. Revolutionary gameplay mechanic that transforms your voice into a weapon against darkness. Mispronounce a Sanskrit mantra, and face immediate consequences.</p>
                 </div>
                 <div class="content-card">
-                    <h3>Voice-Controlled Rituals</h3>
-                    <p>Players must chant mantras correctly to progress. Voice failure results in ritual resets and spirit rage. Revolutionary gameplay mechanic that transforms your voice into a weapon against darkness.</p>
+                    <h3>🧠 Adaptive AI Horror</h3>
+                    <p>The game's AI observes player behavior to deliver personalized, procedural hallucinations. Fear becomes personal as the system learns your deepest anxieties and exploits them. No two playthroughs are identical.</p>
                 </div>
                 <div class="content-card">
-                    <h3>Adaptive AI Horror</h3>
-                    <p>The game's AI observes player behavior to deliver personalized, procedural hallucinations. Fear becomes personal as the system learns your deepest anxieties and exploits them.</p>
+                    <h3>📱 Real-World Integration</h3>
+                    <p>Sends messages to player's WhatsApp and requires visiting real websites to discover mantras. Gaming meets reality in unprecedented ways that blur the line between fiction and truth. Your phone becomes part of the horror experience.</p>
                 </div>
                 <div class="content-card">
-                    <h3>Real-World Integration</h3>
-                    <p>Sends messages to player's WhatsApp and requires visiting real websites to discover mantras. Gaming meets reality in unprecedented ways that blur the line between fiction and truth.</p>
+                    <h3>🎭 Cultural Authenticity</h3>
+                    <p>Meticulously researched Kerala folklore, authentic Sanskrit mantras, and traditional tantric practices. Every detail from temple architecture to ritual implements reflects genuine cultural heritage, creating an immersive experience unlike any Western horror game.</p>
+                </div>
+                <div class="content-card">
+                    <h3>🧩 Puzzle-Driven Exploration</h3>
+                    <p>Uncover hidden paths, secret symbols, and solve ancient puzzles using clues from temple murals and scriptures. Every solution brings you closer to forbidden knowledge—and the lurking presence that guards it.</p>
+                </div>
+                 <div class="content-card">
+                    <h3>🌌 Dynamic Weather & Time</h3>
+                    <p>The Illam reacts to your journey—rains intensify with fear, shadows grow with mistakes, and poojas at the wrong time bring danger. Daylight is your ally, but twilight unveils the true horrors beneath the surface.
+
+</p>
                 </div>
             </div>
         </section>
 
         <section id="team" class="section">
-            <h2>Core Team</h2>
+            <h2>Award-Winning Core Team</h2>
             <div class="content-grid">
                 <div class="content-card team-card">
                     <div class="team-header">
@@ -1468,7 +1695,7 @@
                     </div>
                     <p>17 years of 3D and VFX expertise with meticulous attention to detail and photorealistic 3D recreation. Multi-disciplinary talent spanning coding, video production, and technical leadership.</p>
                 </div>
-                
+
                 <div class="content-card team-card">
                     <div class="team-header">
                         <h3>Jeo Baby</h3>
@@ -1479,18 +1706,18 @@
 
                 <div class="content-card team-card">
                     <div class="team-header">
-                        <h3>MC Jithin</h3>
-                        <span class="role">Direction Assistance</span>
-                    </div>
-                    <p>Indian film director, screenwriter, and educator from Kerala. Notable works include "Nonsense" (2018), critiquing the education system, and "Sookshmadarshini" (2024), a critically acclaimed psychological thriller.</p>
-                </div>
-
-                <div class="content-card team-card">
-                    <div class="team-header">
                         <h3>Mathews Pulickan</h3>
                         <span class="role">Game Music & Scores</span>
                     </div>
                     <p>Award-winning music composer recognized for his background score in "Kaathal - The Core", winning the <strong>Kerala State Film Award for Best Music Direction (Background Score) in 2024</strong>.</p>
+                </div>
+
+                <div class="content-card team-card">
+                    <div class="team-header">
+                        <h3>MC Jithin</h3>
+                        <span class="role">Direction Assistance</span>
+                    </div>
+                    <p>Indian film director, screenwriter, and educator from Kerala. Notable works include "Nonsense" (2018), critiquing the education system, and "Sookshmadarshini" (2024), a critically acclaimed psychological thriller.</p>
                 </div>
 
                 <div class="content-card team-card">
@@ -1578,44 +1805,6 @@
             </div>
         </section>
 
-        <section id="financials" class="section">
-            <h2>Financial Projections</h2>
-            <div class="chart-container">
-                <h3 style="color: #8A2BE2; margin-bottom: 2rem; font-size: 1.5rem; text-align: center;">Revenue Projections (12 Months)</h3>
-                <div class="revenue-bars">
-                    <div class="revenue-bar" data-label="Year 1 Core" data-value="₹15Cr" data-height="180"></div>
-                    <div class="revenue-bar" data-label="Add-On Revenue" data-value="₹1Cr" data-height="50"></div>
-                    <div class="revenue-bar" data-label="Total Revenue" data-value="₹16Cr" data-height="220"></div>
-                </div>
-                <p style="text-align: center; margin-top: 3rem; color: #ccc; font-size: 1.1rem;">
-                    Break-even within 6 months | Target: 1 Lakh units at ₹1,499 each
-                </p>
-            </div>
-
-            <div class="content-grid">
-                <div class="content-card">
-                    <h3>Total Investment Required</h3>
-                    <p><strong style="color: #8A2BE2; font-size: 1.3rem;">₹1.72 Crores (18 Months)</strong></p>
-                    <ul style="margin-top: 1.5rem; color: #ddd; line-height: 1.8;">
-                        <li>Core Team & Development: ₹1.09 Crores</li>
-                        <li>Infrastructure & Equipment: ₹37 Lakhs</li>
-                        <li>Creative & Marketing: ₹9.5 Lakhs</li>
-                        <li>Contingency Buffer (10%): ₹16 Lakhs</li>
-                    </ul>
-                </div>
-                <div class="content-card">
-                    <h3>Revenue Streams</h3>
-                    <ul style="color: #ddd; line-height: 2;">
-                        <li><strong>Core Game Sales:</strong> ₹15 Crores (1L units)</li>
-                        <li><strong>Limited Edition Merch:</strong> ₹50 Lakhs</li>
-                        <li><strong>WhatsApp ARG Unlocks:</strong> ₹20 Lakhs</li>
-                        <li><strong>OTT & Licensing:</strong> ₹30 Lakhs</li>
-                        <li><strong>Year 1 Profit:</strong> ₹14.44 Crores</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
         <section id="franchise" class="section">
             <h2>Franchise Evolution</h2>
             <div class="timeline">
@@ -1646,6 +1835,164 @@
             </div>
         </section>
 
+        <section id="financials" class="section">
+            <h2>Investment & Revenue Plan</h2>
+            
+            <div class="content-grid">
+                <div class="content-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(30, 30, 60, 0.95));">
+                    <h3 style="text-align: center; color: #8A2BE2; font-size: 2rem; margin-bottom: 2rem;">🔧 TOTAL INVESTMENT REQUIRED: ₹1.5 Crores</h3>
+                    <p style="text-align: center; font-size: 1.2rem; margin-bottom: 3rem;">Covers 18 months of development, tools, creative, and team with buffer for scaling.</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="color: #8A2BE2; margin-bottom: 2rem; font-size: 1.5rem;">📦 Detailed Cost Breakdown (₹1.5 Cr)</h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                        <thead>
+                            <tr style="background: rgba(138, 43, 226, 0.3); color: #fff;">
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Category</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Units/People</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Monthly/One-Time</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Duration</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Total (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Unreal Developers</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">3</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹80,000/month</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">18 months</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹43,20,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">3D Artists</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">3</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹80,000/month</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">18 months</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹43,20,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Creative Team</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">2 Writers + 1 Sound</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹2L one-time each</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">One-time</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹4,00,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Software Licenses</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">Adobe, Substance, ZBrush, SpeedTree</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">Monthly/yearly mix</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">18 months</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹4,43,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Claude AI + WhatsApp API</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">-</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹8,500/month</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">18 months</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹1,53,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">System Rentals</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">6 units</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹15,000/month</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">18 months</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹16,20,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Coworking Space</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">6 seats</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹10,000/month</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">18 months</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹10,80,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Contingency/Marketing Buffer</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">Scaling, QA, promo</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">-</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">-</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹26,64,000</td>
+                            </tr>
+                            <tr style="background: rgba(138, 43, 226, 0.2);">
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); font-weight: bold; font-size: 1.1rem;">✅ Total Estimated Budget</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5);"></td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5);"></td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5);"></td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); color: #8A2BE2; font-weight: bold; font-size: 1.2rem;">₹1,50,00,000 (₹1.5 Cr)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="color: #8A2BE2; margin-bottom: 2rem; font-size: 1.5rem;">📈 Projected Revenue (Low to Realistic Case)</h3>
+                <p style="text-align: center; margin-bottom: 2rem; color: #ccc;">Based on a game priced at ₹1,499 (PC) / ₹2,499 (Console)<br>With 30% platform cuts factored in</p>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                        <thead>
+                            <tr style="background: rgba(138, 43, 226, 0.3); color: #fff;">
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Units Sold</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">PC Units</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Console Units</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Gross Revenue</th>
+                                <th style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.5); text-align: left;">Net Revenue (after 30% cut)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Low Case (40K)</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">30K</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">10K</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹8.4 Cr</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹5.88 Cr</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Mid Case (60K)</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">45K</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">15K</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹12.6 Cr</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹8.82 Cr</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); font-weight: bold;">Optimistic Case (80K)</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">60K</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">20K</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3);">₹16.8 Cr</td>
+                                <td style="padding: 1rem; border: 1px solid rgba(138, 43, 226, 0.3); color: #8A2BE2; font-weight: bold;">₹11.76 Cr</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="text-align: center; margin-top: 2rem; color: #ccc; font-style: italic;">Net Revenue = Gross Revenue × 70% (after Steam/Console cuts)</p>
+            </div>
+
+           <div class="chart-container">
+    <h3 style="color: #8A2BE2; margin-bottom: 2rem; font-size: 1.5rem;">🧾 Summary Table</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+        <div style="background: rgba(138, 43, 226, 0.1); padding: 2rem; border-radius: 15px; text-align: center;">
+            <h4 style="color: #8A2BE2; margin-bottom: 1rem;">Investment Ask</h4>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #fff;">₹1.5 Cr</p>
+        </div>
+        <div style="background: rgba(138, 43, 226, 0.1); padding: 2rem; border-radius: 15px; text-align: center;">
+            <h4 style="color: #8A2BE2; margin-bottom: 1rem;">Projected Revenue (Net)</h4>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #fff;">₹6 Cr to ₹11.76 Cr</p>
+        </div>
+        <div style="background: rgba(138, 43, 226, 0.1); padding: 2rem; border-radius: 15px; text-align: center;">
+            <h4 style="color: #8A2BE2; margin-bottom: 1rem;">Expected ROI</h4>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #fff;">4X to 7.5X</p>
+        </div>
+        <div style="background: rgba(138, 43, 226, 0.1); padding: 2rem; border-radius: 15px; text-align: center;">
+            <h4 style="color: #8A2BE2; margin-bottom: 1rem;">Break-even Time</h4>
+            <p style="font-size: 1.5rem; font-weight: bold; color: #fff;">6–8 months post-launch</p>
+        </div>
+    </div>
+</div>
+        </section>
+
         <section id="invest" class="section cta">
             <h2>Join the Ritual</h2>
             <p style="font-size: 1.4rem; margin-bottom: 3rem; position: relative; z-index: 2; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6;">
@@ -1654,7 +2001,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; margin: 4rem 0; position: relative; z-index: 2;">
                 <div style="text-align: center;">
                     <h3 style="color: #8A2BE2; margin-bottom: 1.5rem; font-size: 1.4rem;">Proven Investment Model</h3>
-                    <p style="line-height: 1.6;">₹1.72 Cr investment with 18-month development timeline targeting ₹16 Cr revenue and ₹14.44 Cr profit in Year 1.</p>
+                    <p style="line-height: 1.6;">₹1.5 Cr investment with 18-month development timeline targeting ₹6-11.76 Cr net revenue and 4X-7.5X ROI.</p>
                 </div>
                 <div style="text-align: center;">
                     <h3 style="color: #8A2BE2; margin-bottom: 1.5rem; font-size: 1.4rem;">Viral Innovation Stack</h3>
@@ -1668,6 +2015,31 @@
             <a href="#" class="cta-button">Invest in the Future of Horror</a>
         </section>
     </main>
+
+    <!-- Mechanics Popup -->
+        <div class="popup-overlay" id="mechanicsOverlay"></div>
+        <div class="mechanics-popup" id="mechanicsPopup">
+            <button class="popup-close" onclick="hideMechanicsPopup()">&times;</button>
+            <h3>🎮 Revolutionary Game Mechanics</h3>
+            
+            <h4>🔮 1. Voice-Controlled Ritual System</h4>
+            <p><strong>Description:</strong> Players must <strong>perform rituals by speaking</strong> ancient mantras into their mic. The system:</p>
+            <ul>
+                <li><strong>Recognizes pronunciation and pacing</strong> (if chanted wrong = ritual fails)</li>
+                <li>Forces players to <strong>repeat purification steps</strong> (like dipping in a cursed pond) before retrying</li>
+                <li>Controls enemy behavior: chanting correctly calms or banishes spirits</li>
+            </ul>
+            <p><strong>Why it's unique:</strong> No mainstream horror game has combined <strong>real voice-recited mantras</strong> with <strong>cultural rituals</strong> that punish incorrect performance. It transforms the player's <em>voice</em> into a gameplay mechanic — not just a gimmick.</p>
+            
+            <h4>🧠 2. Adaptive AI-Driven Hallucination Engine</h4>
+            <p><strong>Description:</strong> The game features an AI that:</p>
+            <ul>
+                <li>Monitors your <strong>in-game behavior</strong> (where you look, what you avoid, what scares you)</li>
+                <li>Dynamically triggers <strong>hallucinations, sounds, and events</strong> based on your psychological patterns</li>
+                <li>No two playthroughs are alike. It evolves fear around <em>you</em></li>
+            </ul>
+            <p><strong>Why it's unique:</strong> Unlike scripted jump scares, this engine creates <strong>personalized horror</strong>. It learns your responses and adapts the hallucinations to your fear tolerance — mimicking how haunted minds unravel over time.</p>
+        </div>
 
     <script>
         // Global Variables
@@ -1684,6 +2056,65 @@
         let eventListenersAdded = false;
         let lastScrollY = 0;
         let lastJumpScare = 0;
+
+
+        // Enhanced Mobile Detection and Warning
+        function detectMobileDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile/i;
+            const screenSize = window.innerWidth <= 768 || window.innerHeight <= 768;
+            
+            return mobileRegex.test(userAgent) || screenSize;
+        }
+
+        function showMobileWarning() {
+            const warning = document.getElementById('mobileWarning');
+            if (warning) {
+                warning.style.display = 'flex';
+                document.body.classList.add('mobile-blocked');
+            }
+        }
+
+        function dismissMobileWarning() {
+            const warning = document.getElementById('mobileWarning');
+            if (warning) {
+                warning.style.display = 'none';
+                document.body.classList.remove('mobile-blocked');
+            }
+            
+            // Set mobile-friendly mode
+            isMobile = true;
+            
+            // Disable flashlight and other desktop-only features
+            flashlightEnabled = false;
+            const overlay = document.querySelector('.flashlight-overlay');
+            const beam = document.querySelector('.flashlight-beam');
+            const flashlightBtn = document.getElementById('flashlightBtn');
+            
+            if (overlay) overlay.style.display = 'none';
+            if (beam) beam.style.display = 'none';
+            if (flashlightBtn) flashlightBtn.style.display = 'none';
+            
+            // Show all hidden elements on mobile
+            const hiddenElements = document.querySelectorAll('.hidden-element');
+            hiddenElements.forEach(element => {
+                element.classList.add('revealed');
+            });
+        }
+
+        // Check on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (detectMobileDevice()) {
+                showMobileWarning();
+            }
+        });
+
+        // Check on window resize
+        window.addEventListener('resize', () => {
+            if (detectMobileDevice() && !document.body.classList.contains('mobile-blocked')) {
+                showMobileWarning();
+            }
+        });
 
         // Interval IDs for cleanup
         let crowSoundInterval;
@@ -1758,6 +2189,12 @@
             if (isInTrailerSection) {
                 console.log('Flashlight toggle disabled in trailer section');
                 return;
+
+                // Add right-click flashlight toggle
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault(); // Prevent context menu
+                toggleFlashlight();
+            });
             }
             
             flashlightEnabled = !flashlightEnabled;
@@ -1960,11 +2397,12 @@
                 hasPlayedScream = true;
             }
             
-            // Jump scare logic
+            // Jump scare logic - only if flashlight is enabled
             if (currentTime - lastJumpScare > 20000 && 
                 Math.random() > 0.995 && 
                 hasInteracted && 
-                !isInTrailerSection) {
+                !isInTrailerSection && 
+                flashlightEnabled) {
                 triggerFlashlightJumpScare();
                 lastJumpScare = currentTime;
             }
@@ -2648,6 +3086,42 @@
             }
         }
 
+        // Mechanics Popup Functions
+        function showMechanicsPopup() {
+            const popup = document.getElementById('mechanicsPopup');
+            const overlay = document.getElementById('mechanicsOverlay');
+            
+            if (popup && overlay) {
+                popup.classList.add('show');
+                overlay.classList.add('show');
+            }
+        }
+
+        function hideMechanicsPopup() {
+            const popup = document.getElementById('mechanicsPopup');
+            const overlay = document.getElementById('mechanicsOverlay');
+            
+            if (popup && overlay) {
+                popup.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+        }
+
+        // Add event listeners to mechanics card
+        document.addEventListener('DOMContentLoaded', () => {
+            const mechanicsCard = document.querySelector('.mechanics-card');
+            if (mechanicsCard) {
+                mechanicsCard.addEventListener('mouseenter', showMechanicsPopup);
+                mechanicsCard.addEventListener('mouseleave', hideMechanicsPopup);
+            }
+            
+            // Close popup when clicking overlay
+            const overlay = document.getElementById('mechanicsOverlay');
+            if (overlay) {
+                overlay.addEventListener('click', hideMechanicsPopup);
+            }
+        });
+
         // Initialize All Effects
         document.addEventListener('DOMContentLoaded', () => {
             // Detect mobile and adjust flashlight
@@ -2715,6 +3189,13 @@
 
         // Clean up when page unloads
         window.addEventListener('beforeunload', cleanup);
+
+
+         const popup = document.querySelector('.mechanics-popup');
+    const overlay = document.createElement('div');
+    overlay.classList.add('popup-overlay');
+
     </script>
+
 </body>
 </html>
